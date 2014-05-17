@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email         = ["me@unformatt.com.ar"]
   s.summary       = "Interacts dns made easy API"
   s.description   = "Interacts to dns made easy API"
-  s.homepage      = "git@github.com:unformattmh/dns_made_easy.git"
+  s.homepage      = "https://github.com/unformattmh/dns_made_easy"
   s.license       = "MIT"
 
   s.files         = `git ls-files -z`.split("\x0")
