@@ -23,14 +23,14 @@ module DnsMadeEasy
       }
     end
 
-    def get_domain_record(domain_name, type, name)
-      get_domain_records(domain_name, { type: type, name: name }).first
+    def get_domain_record(domain_name, filters={})
+      get_domain_records(domain_name, filters).first
     end
 
-    def update_domain_record(domain_name, type, name, value)
+    def update_domain_record(domain_name, filters={}, new_values={})
       domain = get_domain(domain_name)
-      record = get_domain_record(domain_name, type, name)
-      attributes = record.merge({ 'value' => value }).to_json
+      record = get_domain_record(domain_name, filters)
+      attributes = record.merge(new_values).to_json
 
       response = put_request("/dns/managed/#{domain['id']}/records/#{record['id']}", attributes)
       response[:status_code] == 200
