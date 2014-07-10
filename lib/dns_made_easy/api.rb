@@ -7,15 +7,20 @@ module DnsMadeEasy
     end
 
     def get_domains
-      get_request('/dns/managed/')[:body]
+      get_request('/dns/managed/')[:body]['data']
     end
 
-    def get_domain(domain_name)
-      get_request("/dns/managed/id/#{domain_name}")[:body]
+    def get_domain(domain_name_or_id)
+      if is_numeric?(domain_name_or_id)
+        get_request("/dns/managed/#{domain_name_or_id}")[:body]
+      else
+        get_domains.api = DnsMadeEasy::Api.new(API_KEY, SECRET_KEY)
+find { |d| d['name'] == domain_name_or_id }
+      end
     end
 
-    def get_domain_records(domain_name, filters={})
-      domain = get_domain(domain_name)
+    def get_domain_records(domain_name_or_id, filters={})
+      domain = get_domain(domain_name_or_id)
       response = get_request("/dns/managed/#{domain['id']}/records")[:body]['data']
 
       response.find_all { |x|
@@ -23,13 +28,13 @@ module DnsMadeEasy
       }
     end
 
-    def get_domain_record(domain_name, filters={})
-      get_domain_records(domain_name, filters).first
+    def get_domain_record(domain_name_or_id, filters={})
+      get_domain_records(domain_name_or_id, filters).first
     end
 
-    def update_domain_record(domain_name, filters={}, new_values={})
-      domain = get_domain(domain_name)
-      record = get_domain_record(domain_name, filters)
+    def update_domain_record(domain_name_or_id, filters={}, new_values={})
+      domain = get_domain(domain_name_or_id)
+      record = get_domain_record(domain_name_or_id, filters)
       attributes = record.merge(new_values).to_json
 
       response = put_request("/dns/managed/#{domain['id']}/records/#{record['id']}", attributes)
@@ -88,6 +93,10 @@ module DnsMadeEasy
         body: (JSON.parse(response.body) rescue response.body),
         status_code: response.code
       }
+    end
+
+    def is_numeric?(obj)
+       obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
     end
   end
 end
