@@ -14,8 +14,7 @@ module DnsMadeEasy
       if is_numeric?(domain_name_or_id)
         get_request("/dns/managed/#{domain_name_or_id}")[:body]
       else
-        get_domains.api = DnsMadeEasy::Api.new(API_KEY, SECRET_KEY)
-find { |d| d['name'] == domain_name_or_id }
+        get_domains.find { |d| d['name'] == domain_name_or_id }
       end
     end
 

@@ -9,3 +9,7 @@
 ## v0.0.3
 
 * Bugfixes
+
+## v0.0.4
+
+* Syntax error fixed
