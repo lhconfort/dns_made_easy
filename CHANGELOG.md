@@ -13,3 +13,7 @@
 ## v0.0.4
 
 * Syntax error fixed
+
+## v0.0.5
+
+* Fixed gem dependencies
